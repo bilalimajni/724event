@@ -1,3 +1,4 @@
+
 import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
@@ -10,14 +11,21 @@ import Logo from "../../components/Logo";
 import Icon from "../../components/Icon";
 import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
+import ModalEvent from "../../containers/ModalEvent";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { data: eventData } = useData();
-  const last =
-    eventData?.events?.reduce((prevEvent, currentEvent) =>
-      new Date(currentEvent.date) > new Date(prevEvent.date) ? currentEvent : prevEvent
-    ) ?? null;
+// BI Récupère les données d'événement à partir du contexte
+const { data: eventData } = useData();
+
+// BI Trouve le dernier événement en comparant les dates
+const last =
+  // BI Utilise reduce pour comparer les dates et trouver le dernier événement
+  eventData?.events?.reduce((prevEvent, currentEvent) =>
+    // BI Si la date de l'événement actuel est postérieure à celle de l'événement précédent, utilise l'événement actuel comme dernier événement
+    new Date(currentEvent.date) > new Date(prevEvent.date) ? currentEvent : prevEvent
+  ) ?? null;  // Si eventData est null, attribue null à la variable last
+
   return <>
     <header>
       <Menu />
@@ -27,6 +35,8 @@ const Page = () => {
         <Slider />
       </section>
       <section className="ServicesContainer">
+  /
+              {/* BI: Lien redirigeant vers une destination spécifique avec l'identifiant */}
         <h2 id="nos-services" className="Title">Nos services</h2>
         <p>Nous organisons des événements sur mesure partout dans le monde</p>
         <div className="ListContainer">
@@ -56,10 +66,12 @@ const Page = () => {
         </div>
       </section>
       <section className="EventsContainer">
+          {/* BI: Lien redirigeant vers une destination spécifique avec l'identifiant */}
         <h2 id="nos-realisations" className="Title">Nos réalisations</h2>
         <EventList />
       </section>
       <section className="PeoplesContainer">
+          {/* BI: Lien redirigeant vers une destination spécifique avec l'identifiant */}
         <h2 id="notre-equipe" className="Title">Notre équipe</h2>
         <p>Une équipe d’experts dédiés à l’ogranisation de vos événements</p>
         <div className="ListContainer">
@@ -119,7 +131,9 @@ const Page = () => {
     </main>
     <footer className="row">
       <div className="col presta">
+        {/* BI Condition : Vérifie si la variable last est définie (non null) */}
       {last && (
+        /* BI Rendu d'une carte d'événement uniquement si la variable last est définie */
   <EventCard
     data-testid="last-event-card"
     imageSrc={last.cover}
