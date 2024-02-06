@@ -19,13 +19,23 @@ export const api = {
 export const DataProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+  const [last, setLast] = useState(null);
+  
   const getData = useCallback(async () => {
     try {
-      setData(await api.loadData());
+      const eventData = await api.loadData();
+      setData(eventData);
+      
+      const lastEvent = eventData?.events?.reduce((prevEvent, currentEvent) =>
+        new Date(currentEvent.date) > new Date(prevEvent.date) ? currentEvent : prevEvent
+      ) ?? null;
+      
+      setLast(lastEvent);
     } catch (err) {
       setError(err);
     }
   }, []);
+  
   useEffect(() => {
     if (data) return;
     getData();
@@ -37,6 +47,7 @@ export const DataProvider = ({ children }) => {
       value={{
         data,
         error,
+        last,
       }}
     >
       {children}
